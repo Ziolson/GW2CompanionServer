@@ -1,18 +1,33 @@
 package pl.ziolekmariusz.model;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-/**
- * Created by ziolson on 04.05.17.
- */
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "gem_store_items")
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String name;
     private String url;
     private String image;
     private int gemCost;
     private int quantity;
+    private boolean available;
     private String dollarOrEuroPrice;
     private String poundPrice;
+
+    @JsonIgnore
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -54,6 +69,14 @@ public class Item {
         this.quantity = quantity;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
     public String getDollarOrEuroPrice() {
         return dollarOrEuroPrice;
     }
@@ -68,6 +91,38 @@ public class Item {
 
     public void setPoundPrice(String poundPrice) {
         this.poundPrice = poundPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Item item = (Item) o;
+
+        if (gemCost != item.gemCost) return false;
+        if (quantity != item.quantity) return false;
+        if (available != item.available) return false;
+        if (id != null ? !id.equals(item.id) : item.id != null) return false;
+        if (!name.equals(item.name)) return false;
+        if (!url.equals(item.url)) return false;
+        if (!image.equals(item.image)) return false;
+        if (!dollarOrEuroPrice.equals(item.dollarOrEuroPrice)) return false;
+        return poundPrice.equals(item.poundPrice);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + url.hashCode();
+        result = 31 * result + image.hashCode();
+        result = 31 * result + gemCost;
+        result = 31 * result + quantity;
+        result = 31 * result + (available ? 1 : 0);
+        result = 31 * result + dollarOrEuroPrice.hashCode();
+        result = 31 * result + poundPrice.hashCode();
+        return result;
     }
 
     @Override
